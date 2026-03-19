@@ -9,7 +9,12 @@ export default function SendPayment() {
 			<header className="mb-12">
 				<h2 className="text-5xl font-extrabold tracking-tight text-on-surface mb-2 font-headline">Send Payment
 				</h2>
-				<p className="text-on-surface-variant max-w-2xl font-body">Anonymize your footprint. Spektra generates
+				{/* 
+					Dissociate your footprint.
+					Anonymize your footprint.
+					Maintain a sanitized digital footprint
+				*/}
+				<p className="text-on-surface-variant max-w-2xl font-body">Dissociate your footprint. Spektra generates
 					unique one-time addresses to break the on-chain link between sender and receiver.</p>
 			</header>
 			<div className="grid grid-cols-1 lg:grid-cols-12 gap-8">

@@ -21,7 +21,7 @@ export default function RequestPayment() {
 						</div> */}
 						<h1 className="font-headline font-extrabold text-4xl tracking-tight text-on-surface">Request Payment
 						</h1>
-						<p className="text-on-surface-variant text-sm">Configure your payment link to send to anyone.</p>
+						<p className="text-on-surface-variant text-sm">Configure your payment link to facilitate payments from anyone.</p>
 					</header>
 					<div className="space-y-6">
 						{/* Asset Selector*/}
@@ -71,9 +71,8 @@ export default function RequestPayment() {
 						<div className="mt-6 flex items-start gap-3 p-4 bg-primary/5 rounded-md border border-primary/10">
 							<span className="material-symbols-outlined text-primary text-xl">info</span>
 							<p className="text-xs text-on-surface-variant leading-relaxed">
-								Funds will be deposited directly into your linked vault once the sender confirms the
-								transaction on the
-								blockchain.
+								Funds will be reflected directly into your linked vault once the sender confirms the
+								transaction on the network.
 							</p>
 						</div>
 					</div>

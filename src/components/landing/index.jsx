@@ -130,7 +130,7 @@ export default function Landing() {
                   Private Scanning
                 </h3>
                 <p className="text-on-surface-variant text-sm leading-relaxed">
-                  Only your Viewing Key can scan the blockchain to find payments
+                  Only your Viewing Key can scan the network to find payments
                   intended for you, keeping your balance 100% private.
                 </p>
               </div>

@@ -38,7 +38,7 @@ export default function Dashboard() {
 						<span className="material-symbols-outlined !text-4xl" data-icon="north_east">north_east</span>
 						<div className="text-left">
 							<span className="block text-xl font-bold font-headline">Send</span>
-							<span className="text-[10px] uppercase tracking-widest opacity-80">Encrypted Transfer</span>
+							<span className="text-[10px] uppercase tracking-widest opacity-80">Stealth Transfer</span>
 						</div>
 					</Link>
 					<Link href="/app/request"
@@ -46,7 +46,7 @@ export default function Dashboard() {
 						<span className="material-symbols-outlined !text-4xl text-primary" data-icon="south_west">south_west</span>
 						<div className="text-left">
 							<span className="block text-xl font-bold font-headline">Request</span>
-							<span className="text-[10px] uppercase tracking-widest opacity-40">Generate Stealth ID</span>
+							<span className="text-[10px] uppercase tracking-widest opacity-40">Facilitate Payments</span>
 						</div>
 					</Link>
 				</div>
@@ -185,8 +185,7 @@ export default function Dashboard() {
 								className="mb-4 w-full py-3 bg-[#0e0e11] border border-primary/30 text-primary font-bold text-xs uppercase tracking-widest hover:bg-primary hover:text-on-primary transition-all rounded-md active:scale-95">
 								Consolidate Assets
 						</button>
-						<p className="text-xs text-on-surface-variant leading-relaxed">Automatic sweeping is currently enabled for all fragments 
-							over 0.1 HBAR. Gas costs will be deducted from your primary relay vault.</p>
+						<p className="text-xs text-on-surface-variant leading-relaxed">Platform Fees and Gas costs will be deducted from your primary relay vault.</p>
 					</div>
 					{/* Mini Map/Location Placeholder */}
 					<div className="bg-surface-container-low rounded-xl overflow-hidden aspect-video relative group">
