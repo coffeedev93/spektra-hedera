@@ -1,7 +1,10 @@
+import AppLayout from "@/components/common/layout";
+import RequestPayment from "@/components/request";
+
 export default function RequestPaymentPage() {
   return (
-		<div>
-			<h3>Request Payment</h3>
-		</div>
+		<AppLayout>
+			<RequestPayment />
+		</AppLayout>
 	)
 }

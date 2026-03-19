@@ -60,7 +60,7 @@ export default function Landing() {
                 Connect Wallet
               </button>
               <Link
-                href="/dashboard"
+                href="/app"
                 className="bg-surface-variant/40 border border-outline-variant/20 text-on-surface font-bold px-10 py-4 rounded-md text-lg hover:bg-surface-variant/60 transition-all"
               >
                 Learn More

@@ -1,7 +1,10 @@
+import AppLayout from "@/components/common/layout";
+import SendPayment from "@/components/send";
+
 export default function SendPaymentPage() {
   return (
-		<div>
-			<h3>Send Payment</h3>
-		</div>
+		<AppLayout>
+			<SendPayment />
+		</AppLayout>
 	)
 }
