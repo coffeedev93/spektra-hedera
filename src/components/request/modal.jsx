@@ -1,4 +1,28 @@
-export default function RequestModal({ setIsModalOpen }) {
+import { useState } from "react";
+import QRCodeGenerator from "../common/qrcode-gen";
+
+export default function RequestModal({
+	requestParams = [],
+	setIsModalOpen 
+}) {
+	const [user, token, amount, memo] = requestParams;
+	const query = btoa(`${token}|${amount}|${memo.trim() === "" ? 0 : memo}`);
+	const requestUrl=`https://spektra.vercel.app/send/@${user}?r=${query}`;
+
+	const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(requestUrl);
+
+      setCopied(true);
+
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center px-4">
 			<div 
@@ -6,7 +30,7 @@ export default function RequestModal({ setIsModalOpen }) {
 				onClick={() => setIsModalOpen(false)}
 			></div>
 		<div className="w-full max-w-md obsidian-glass rounded-xl p-8 border border-outline-variant/20 shadow-2xl">
-			<div className="flex justify-between items-start mb-6">
+			<div className="flex justify-between items-start mb-4">
 				<div>
 					<h2 className="font-headline font-bold text-2xl text-primary">Share Request</h2>
 					<p className="text-xs text-on-surface-variant font-label tracking-wide mt-1">
@@ -21,23 +45,36 @@ export default function RequestModal({ setIsModalOpen }) {
 					<span className="material-symbols-outlined" data-icon="close">close</span>
 				</button>
 			</div>
-			<div className="space-y-6">
-				<div className="aspect-square w-48 mx-auto bg-white p-4 rounded-xl shadow-lg">
-					<img className="w-full h-full object-contain" data-alt="QR code for payment request"
-						src="https://lh3.googleusercontent.com/aida-public/AB6AXuB63B6nCqYSDugQpyK1YrvHLhJVl0L6cg80VwkxfeqdoWSAMfJPo1wJHypcUo8V71Z95EyMeRlxLFKrJ5U6atdP74k5yoJLjggfWm6LkhyrWCuCXUqZYI25_gFIop55JvDak1Ks7fgkQlLrr5hLMNWcnqrAwt6RXfHJvDXa3EDMVBn_6zIn9u-76ZWHELffNSR0T1rPs_esRY5kzAC0iSslh8q9-Z9iJBMZpzub7h4b0DjxW18OeKC8OyYdRounm9DzJFdlN0rGKgt7" />
-				</div>
+			<div className="space-y-4">
+				<QRCodeGenerator 
+						text={requestUrl}
+						size={300} 
+				/>
 				<div className="w-full space-y-4">
 					<div
 						className="flex items-center gap-2 bg-surface-container-lowest p-1 pl-4 rounded-md border border-outline-variant/20">
-						<span
-							className="text-xs text-on-surface-variant truncate flex-grow text-left">spektra.pay/x7a2...8k9</span>
+						<input
+							className="text-xs text-on-surface-variant truncate flex-grow text-left"
+							readOnly
+							type="text"
+							value={requestUrl}
+						/>
 						<button
-							className="bg-surface-container-high hover:bg-surface-bright text-primary text-[10px] font-bold uppercase px-4 py-2 rounded-md transition-colors">
-							Copy Link
+							className="bg-surface-container-high hover:bg-surface-bright text-primary text-[10px] font-bold uppercase px-4 py-2 rounded-md transition-colors"
+							onClick={handleCopy}
+						>
+							{copied ? "Copied!" : "Copy Link"}
 						</button>
 					</div>
 				</div>
-				<div className="grid grid-cols-2 gap-4">
+				<div className="flex items-start gap-3 px-4 py-2 bg-primary/5 rounded-md border border-primary/10">
+					<span className="material-symbols-outlined text-primary text-2xl">info</span>
+					<p className="text-xs text-on-surface-variant leading-relaxed">
+						{`You're requesting ${amount} ${token}`}
+					</p>
+				</div>
+				
+				{/* <div className="grid grid-cols-2 gap-4">
 					<button
 						className="flex items-center justify-center gap-2 bg-surface-container-low hover:bg-surface-container-high py-3 rounded-md transition-all">
 						<span className="material-symbols-outlined text-sm">share</span>
@@ -48,7 +85,7 @@ export default function RequestModal({ setIsModalOpen }) {
 						<span className="material-symbols-outlined text-sm text-primary">download</span>
 						<span className="text-xs font-semibold">Save QR</span>
 					</button>
-				</div>
+				</div> */}
 			</div>
 		</div>
 	</div>

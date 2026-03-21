@@ -93,7 +93,7 @@ export default function Landing() {
                 </button>
               )}
               <Link
-                href="/app"
+                href="/assets"
                 className="bg-surface-variant/40 border border-outline-variant/20 text-on-surface font-bold px-10 py-4 rounded-md text-lg hover:bg-surface-variant/60 transition-all"
               >
                 Learn More

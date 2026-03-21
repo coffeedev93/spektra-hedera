@@ -33,7 +33,7 @@ export default function Dashboard() {
 				</div>
 				{/* Quick Action Buttons */}
 				<div className="lg:col-span-5 grid grid-cols-2 gap-4">
-					<Link href="/app/send"
+					<Link href="/send"
 						className="group flex flex-col justify-between p-6 bg-gradient-to-br from-primary to-primary-container rounded-xl h-44 text-on-primary transition-all active:scale-[0.98]">
 						<span className="material-symbols-outlined !text-4xl" data-icon="north_east">north_east</span>
 						<div className="text-left">
@@ -41,7 +41,7 @@ export default function Dashboard() {
 							<span className="text-[10px] uppercase tracking-widest opacity-80">Stealth Transfer</span>
 						</div>
 					</Link>
-					<Link href="/app/request"
+					<Link href="/request"
 						className="group flex flex-col justify-between p-6 bg-surface-container-high rounded-xl h-44 border border-outline-variant/20 hover:border-primary/40 transition-all active:scale-[0.98]">
 						<span className="material-symbols-outlined !text-4xl text-primary" data-icon="south_west">south_west</span>
 						<div className="text-left">
