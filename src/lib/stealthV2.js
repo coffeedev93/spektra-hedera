@@ -135,7 +135,7 @@ export function generateRandomStealthMetaAddress() {
 
 export async function generateSpendViewKeys(signer) {
 	// Base message that will be signed
-	const baseMessage = 'Sign this message to access your Stealth account.\n\nOnly sign this message for a trusted client!'; // prettier-ignore
+	const baseMessage = 'Sign this message to access your Stealth account.\nOnly sign this message for a trusted client!'; // prettier-ignore
 
 	// Append chain ID if not mainnet to mitigate replay attacks
 	const { chainId } = 1;
@@ -187,4 +187,9 @@ export async function generateSpendViewKeys(signer) {
 		//public: uintArrayToHex(secp.getPublicKey(viewingPrivateKey, isCompressed=true))
 	};
 	return { spendingKeyPair, viewingKeyPair };
+}
+
+// To verify Hashpack signatures in backend https://github.com/Hashpack/hashconnect?tab=readme-ov-file#verify-signature
+export function prefixMessageToSign(message) {
+	return '\x19Hedera Signed Message:\n' + message.length + message
 }

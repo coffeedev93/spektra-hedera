@@ -1,11 +1,20 @@
-"use client";
+'use client'
 
 import { useState } from "react";
 import Link from "next/link";
 import LandingModal from "./modal";
 
+import { useWalletStore } from "@/store/useWalletStore";
+import { useHashConnect } from "@/hooks/useHashConnect";
+
 export default function Landing() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Bring in our global state and HashConnect methods
+  const { accountId } = useWalletStore();
+  const { connect, disconnect, signData } = useHashConnect();
+  
+  const isConnected = !!accountId;
 
   return (
     <>
@@ -18,9 +27,23 @@ export default function Landing() {
             </span>
           </div>
           <div className="flex items-center gap-6">
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-surface-container text-xs font-mono text-on-surface-variant">
-              <div className="w-2 h-2 rounded-full bg-error shadow-[0_0_8px_#ffabf3]"></div>
-              Not Connected
+            <div className="flex items-center gap-6">
+              {/* Dynamic Connection Status Indicator */}
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-surface-container text-xs font-mono text-on-surface-variant">
+                <div 
+                  className={`w-2 h-2 rounded-full shadow-[0_0_8px_currentColor] ${
+                    isConnected ? "bg-tertiary text-tertiary" : "bg-error text-error"
+                  }`}
+                ></div>
+                {isConnected 
+                  ? `${accountId}` 
+                  : "Not Connected"}
+              </div>
+              {isConnected && (
+                <button onClick={disconnect} className="text-xs font-bold text-on-surface-variant hover:text-error transition-colors">
+                  Disconnect
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -53,12 +76,22 @@ export default function Landing() {
               your personal wallet using stealth address technology.
             </p>
             <div className="flex flex-wrap gap-6">
-              <button
-                onClick={() => setIsModalOpen(true)}
-                className="spectral-glow text-on-primary font-bold px-10 py-4 rounded-md text-lg active:scale-95 transition-all"
-              >
-                Connect Wallet
-              </button>
+              {/* Conditional Button Logic based on Wallet State */}
+              {!isConnected ? (
+                <button
+                  onClick={connect}
+                  className="spectral-glow text-on-primary font-bold px-10 py-4 rounded-md text-lg active:scale-95 transition-all"
+                >
+                  Connect Wallet
+                </button>
+              ) : (
+                <button
+                  onClick={() => setIsModalOpen(true)}
+                  className="bg-surface-bright text-primary border border-primary/40 font-bold px-10 py-4 rounded-md text-lg active:scale-95 transition-all shadow-[0_0_15px_rgba(255,171,243,0.3)] hover:shadow-[0_0_25px_rgba(255,171,243,0.5)]"
+                >
+                  Initialize Session Keys
+                </button>
+              )}
               <Link
                 href="/app"
                 className="bg-surface-variant/40 border border-outline-variant/20 text-on-surface font-bold px-10 py-4 rounded-md text-lg hover:bg-surface-variant/60 transition-all"
@@ -153,7 +186,10 @@ export default function Landing() {
 
       {/* Signature Modal */}
       {isModalOpen && (
-        <LandingModal setIsModalOpen={setIsModalOpen} />
+        <LandingModal 
+          signData={signData}
+          setIsModalOpen={setIsModalOpen} 
+        />
       )}
 
       {/* Footer */}
