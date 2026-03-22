@@ -45,19 +45,19 @@ export function generateStealthInfo(stealthMetaAddress) {
   //console.log('ephemeralPublicKey:', Buffer.from(ephemeralPublicKey).toString('hex'));
 
   const sharedSecret = secp.getSharedSecret(ephemeralPrivateKey, R_pubkey_view);
-  console.log('sharedSecret:', sharedSecret);
+  //console.log('sharedSecret:', sharedSecret);
 
   var hashedSharedSecret = keccak256(Buffer.from(sharedSecret.slice(1)));
-  console.log('hashedSharedSecret:', hashedSharedSecret);
+  //console.log('hashedSharedSecret:', hashedSharedSecret);
 
   var ViewTag = hashedSharedSecret.slice(0,4);
   //console.log('View tag:', ViewTag.toString('hex'));
   const hashedSharedSecretPoint = secp.Point.fromPrivateKey(Buffer.from(hashedSharedSecret.slice(2), "hex"));
   //console.log('hashedSharedSecretPoint1:', hashedSharedSecretPoint);
   const stealthPublicKey = R_pubkey_spend.add(hashedSharedSecretPoint);
-  console.log("stealthPublicKey.toHex(): ", stealthPublicKey.toHex());
+  //console.log("stealthPublicKey.toHex(): ", stealthPublicKey.toHex());
   const stealthAddress = toEthAddress(stealthPublicKey.toHex());
-  console.log('stealth address:', stealthAddress);
+  //console.log('stealth address:', stealthAddress);
   return {"stealthAddress":stealthAddress, "ephemeralPublicKey":"0x"+Buffer.from(ephemeralPublicKey).toString('hex'), "ViewTag":ViewTag.toString('hex')};
 }
 

@@ -11,7 +11,7 @@ export default function LandingModal({ signData, setIsModalOpen }) {
 
     try {
       // The payload you want the user to sign to generate deterministic keys
-      const payloadToSign = `Authenticate Project Nebula Session\nTimestamp: 0x`;
+      const payloadToSign = `Authenticate Your Spektra Session\nTimestamp: 0x`;
       
       const response = await signData(payloadToSign);
      
