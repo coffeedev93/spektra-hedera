@@ -1,6 +1,6 @@
 'use client';
 
-import { checkRegistryEntry } from '@/lib/service';
+import { getRegistryEntry } from '@/lib/service';
 import React, { useState, useEffect } from 'react';
 
 const UserInputComponent = ({ 
@@ -10,7 +10,6 @@ const UserInputComponent = ({
   setMetaAddress,
   isReadonly 
 }) => {
-  // 2. State to show the user that validation/searching is pending
   const [isWaiting, setIsWaiting] = useState(false);
 
   useEffect(() => {
@@ -19,16 +18,13 @@ const UserInputComponent = ({
       setIsWaiting(false);
       return;
     }
-
-    // Indicate that the 3-second countdown has started
     setIsWaiting(true);
 
     const delayDebounceFn = setTimeout(async () => {
-      const userMetaAddress = await checkRegistryEntry(username);
+      const {data} = await getRegistryEntry(username);
       // the change in metaAddress triggers generateStealthAddress() in the index page
-      setMetaAddress(userMetaAddress);
+      setMetaAddress(data);
       setIsWaiting(false);
-      //console.log("Validation executed for:", username, userMetaAddress);
     }, 1000);
 
     // Cleanup: If the user types again, kill the previous 3s timer

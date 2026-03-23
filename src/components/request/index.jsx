@@ -1,8 +1,9 @@
 "use client"
 
 import Link from "next/link"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import RequestModal from "./modal";
+import { getaddr } from "@/lib/service";
 
 
 export default function RequestPayment() { 
@@ -10,7 +11,7 @@ export default function RequestPayment() {
 	const [amount, setAmount] = useState(0);
 	const [token, setToken] = useState("HBAR");
 	const [memo, setMemo] = useState("");
-	const [user, setUser] = useState("user");
+	const [user, setUser] = useState("user"); // should be the current user
 
   return (
 		<>

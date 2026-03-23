@@ -99,41 +99,6 @@ export default function LandingModal({ signData, setIsModalOpen }) {
 			<p className="text-[10px] text-center text-on-surface-variant uppercase tracking-[0.2em]">
 				{isSigning ? "Awaiting your approval" : "Signature request will appear in Hashpack"}
 			</p>
-
-				{/* <div className="space-y-4 mb-8">
-					<div className="flex items-center gap-4 p-4 rounded-lg bg-surface-container-lowest border border-outline-variant/10">
-						<span className="material-symbols-outlined text-primary">
-							visibility
-						</span>
-						<div>
-							<p className="text-xs font-bold tracking-widest uppercase opacity-60">
-								Viewing Key
-							</p>
-							<p className="text-sm font-mono truncate w-48 text-on-surface">
-								nebula_vk_0x9f...a23
-							</p>
-						</div>
-					</div>
-					<div className="flex items-center gap-4 p-4 rounded-lg bg-surface-container-lowest border border-outline-variant/10">
-						<span className="material-symbols-outlined text-primary">
-							vpn_key
-						</span>
-						<div>
-							<p className="text-xs font-bold tracking-widest uppercase opacity-60">
-								Spending Key
-							</p>
-							<p className="text-sm font-mono truncate w-48 text-on-surface">
-								nebula_sk_0x4d...e89
-							</p>
-						</div>
-					</div>
-				</div>
-				<button className="w-full py-4 rounded-md spectral-glow text-on-primary font-bold text-lg mb-4">
-					Sign to Initialize
-				</button>
-				<p className="text-[10px] text-center text-on-surface-variant uppercase tracking-[0.2em]">
-					Signature request will appear in Hashpack
-				</p> */}
 			</div>
 		</div>
 	)

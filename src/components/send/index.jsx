@@ -6,6 +6,7 @@ import AssetSelector from "./asset-selector";
 import AmountInput from "./amount-input";
 import UserInputComponent from "./user-input";
 import { generateStealthInfo } from "@/lib/stealthV2";
+import { publishAnnouncement } from "@/lib/service";
 
 
 export default function SendPayment({ _username }) { 
@@ -43,7 +44,14 @@ export default function SendPayment({ _username }) {
 	const exchangeRate = token === "USDC" ? 1 : 0.09;
 
 	const excecutePayment = async () => {
-		console.log(username, amount, token, stealthInfo)
+		//console.log(username, amount, token, stealthInfo)
+		// first send payment...
+
+		// then publish announcement
+		const msg = btoa(`${stealthInfo.stealthAddress}|${stealthInfo.ephemeralPublicKey}|${stealthInfo.viewTag}`);
+		const announ = await publishAnnouncement(msg);
+
+		console.log(announ)
 	}
 
   return (

@@ -27,38 +27,25 @@ export function generateStealthInfo(stealthMetaAddress) {
   const USER = stealthMetaAddress;
   
 	if (!USER.startsWith("st:eth:0x")){
-    throw "Wrong address format; Address must start with `st:eth:0x...`";
+    //throw "Wrong address format; Address must start with `st:hbar:0x...`";
+    console.log("Error! Wrong address format; Address must start with `st:eth:0x...`");
+    return {}
   }
 
   const R_pubkey_spend = secp.Point.fromHex(USER.slice(9,75));
-  //console.log('R_pubkey_spend:', R_pubkey_spend);
-
   const R_pubkey_view = secp.Point.fromHex(USER.slice(75,));
 
-//  const randomInt = BigInt(`0x${hexString}`);
-
-  const ephemeralPrivateKey = randomPrivateKey(); // BigInt(process.env.NEXT_PUBLIC_RANDOM_PK)
-;
-  //console.log('ephemeralPrivateKey:', "0x" + ephemeralPrivateKey.toString(16));
-
+  const ephemeralPrivateKey = randomPrivateKey(); 
   const ephemeralPublicKey = secp.getPublicKey(ephemeralPrivateKey, true);
-  //console.log('ephemeralPublicKey:', Buffer.from(ephemeralPublicKey).toString('hex'));
-
   const sharedSecret = secp.getSharedSecret(ephemeralPrivateKey, R_pubkey_view);
-  //console.log('sharedSecret:', sharedSecret);
-
   var hashedSharedSecret = keccak256(Buffer.from(sharedSecret.slice(1)));
-  //console.log('hashedSharedSecret:', hashedSharedSecret);
 
-  var ViewTag = hashedSharedSecret.slice(0,4);
-  //console.log('View tag:', ViewTag.toString('hex'));
+  var viewTag = hashedSharedSecret.slice(0,4);
   const hashedSharedSecretPoint = secp.Point.fromPrivateKey(Buffer.from(hashedSharedSecret.slice(2), "hex"));
-  //console.log('hashedSharedSecretPoint1:', hashedSharedSecretPoint);
   const stealthPublicKey = R_pubkey_spend.add(hashedSharedSecretPoint);
-  //console.log("stealthPublicKey.toHex(): ", stealthPublicKey.toHex());
   const stealthAddress = toEthAddress(stealthPublicKey.toHex());
-  //console.log('stealth address:', stealthAddress);
-  return {"stealthAddress":stealthAddress, "ephemeralPublicKey":"0x"+Buffer.from(ephemeralPublicKey).toString('hex'), "ViewTag":ViewTag.toString('hex')};
+
+  return {"stealthAddress":stealthAddress, "ephemeralPublicKey":"0x"+Buffer.from(ephemeralPublicKey).toString('hex'), "viewTag":viewTag.toString('hex')};
 }
 
 export function parseStealthAddresses(
