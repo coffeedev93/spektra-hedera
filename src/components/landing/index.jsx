@@ -2,19 +2,23 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import LandingModal from "./modal";
+import dynamic from 'next/dynamic';
 
-import { useWalletStore } from "@/store/useWalletStore";
-import { useHashConnect } from "@/hooks/useHashConnect";
+// Importing dynamically to avoid HashConnect's SSR issues
+const WalletState = dynamic(() => import('./wallet-state'), {
+  ssr: false,
+});
+
+const HeroButons = dynamic(() => import('./hero-buttons'), {
+  ssr: false,
+});
+
+const LandingModal = dynamic(() => import('./modal'), {
+  ssr: false,
+});
 
 export default function Landing() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  // Bring in our global state and HashConnect methods
-  const { accountId } = useWalletStore();
-  const { connect, disconnect, signData } = useHashConnect();
-  
-  const isConnected = !!accountId;
 
   return (
     <>
@@ -27,8 +31,8 @@ export default function Landing() {
             </span>
           </div>
           <div className="flex items-center gap-6">
-            <div className="flex items-center gap-6">
-              {/* Dynamic Connection Status Indicator */}
+            <WalletState />
+            {/* <div className="flex items-center gap-6">
               <div className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-surface-container text-xs font-mono text-on-surface-variant">
                 <div 
                   className={`w-2 h-2 rounded-full shadow-[0_0_8px_currentColor] ${
@@ -44,7 +48,7 @@ export default function Landing() {
                   Disconnect
                 </button>
               )}
-            </div>
+            </div> */}
           </div>
         </div>
       </nav>
@@ -75,8 +79,8 @@ export default function Landing() {
               The latest upgrade for on-chain privacy. Transact without exposing
               your personal wallet using stealth address technology.
             </p>
-            <div className="flex flex-wrap gap-6">
-              {/* Conditional Button Logic based on Wallet State */}
+            <HeroButons setIsModalOpen={setIsModalOpen} />
+            {/* <div className="flex flex-wrap gap-6">
               {!isConnected ? (
                 <button
                   onClick={connect}
@@ -98,7 +102,7 @@ export default function Landing() {
               >
                 Learn More
               </Link>
-            </div>
+            </div> */}
           </div>
 
           {/* Visual Decorative Element */}
@@ -187,7 +191,6 @@ export default function Landing() {
       {/* Signature Modal */}
       {isModalOpen && (
         <LandingModal 
-          signData={signData}
           setIsModalOpen={setIsModalOpen} 
         />
       )}

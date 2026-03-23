@@ -1,4 +1,12 @@
+"use client"
+
 import Link from "next/link";
+import dynamic from 'next/dynamic';
+//import WalletState from "../landing/wallet-state";
+
+const WalletState = dynamic(() => import('../landing/wallet-state'), {
+	ssr: false,
+});
 
 export default function AppLayout({ children }) {
   return (
@@ -20,7 +28,8 @@ export default function AppLayout({ children }) {
 								href="#">History</a>
 						</nav> */}
 					</div>
-					<div className="flex items-center gap-4">
+					<WalletState />
+					{/* <div className="flex items-center gap-4">
 						<div
 							className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-surface-container text-xs font-mono text-on-surface-variant">
 							<div className="w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_#ffabf3]"></div>
@@ -34,7 +43,7 @@ export default function AppLayout({ children }) {
 								<span className="material-symbols-outlined" data-icon="settings">settings</span>
 							</button>
 						</div>
-					</div>
+					</div> */}
 				</header>
 
 				{/* Content */}

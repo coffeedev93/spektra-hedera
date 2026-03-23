@@ -1,8 +1,11 @@
 import { useState } from "react";
+import { useHashConnect } from "@/hooks/useHashConnect";
 
-export default function LandingModal({ signData, setIsModalOpen }) {
+export default function LandingModal({ setIsModalOpen }) {
 	const [isSigning, setIsSigning] = useState(false);
   const [signatureSuccess, setSignatureSuccess] = useState(false);
+
+	const { signData } = useHashConnect();
 
 	// Handler for the signature request
   const handleSignatureRequest = async () => {
