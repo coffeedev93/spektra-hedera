@@ -2,23 +2,31 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import dynamic from 'next/dynamic';
+import WalletState from "./wallet-state";
+import HeroButtons from "./hero-buttons";
+import LandingModal from "./modal";
+
+//import dynamic from 'next/dynamic';
+
+// function Dloading() {
+//   return <span className="text-xs font-mono">Loading...</span>
+// }
 
 // Importing dynamically to avoid HashConnect's SSR issues
-const WalletState = dynamic(() => import('./wallet-state'), {
-  ssr: false,
-  loading: () => <span className="text-xs font-mono">Loading...</span>,
-});
+// const WalletState = dynamic(() => import('./wallet-state'), {
+//   ssr: false,
+//   loading: () => <Dloading />,
+// });
 
-const HeroButons = dynamic(() => import('./hero-buttons'), {
-  ssr: false,
-  loading: () => <span className="text-xs font-mono">Loading...</span>,
-});
+// const HeroButtons = dynamic(() => import('./hero-buttons'), {
+//   ssr: false,
+//   loading: () => <Dloading />,
+// });
 
-const LandingModal = dynamic(() => import('./modal'), {
-  ssr: false,
-  loading: () => <span className="text-xs font-mono">Loading...</span>,
-});
+// const LandingModal = dynamic(() => import('./modal'), {
+//   ssr: false,
+//   loading: () => <Dloading />,
+// });
 
 export default function Landing() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -82,7 +90,7 @@ export default function Landing() {
               The latest upgrade for on-chain privacy. Transact without exposing
               your personal wallet using stealth address technology.
             </p>
-            <HeroButons setIsModalOpen={setIsModalOpen} />
+            <HeroButtons setIsModalOpen={setIsModalOpen} />
             {/* <div className="flex flex-wrap gap-6">
               {!isConnected ? (
                 <button
