@@ -1,3 +1,5 @@
+"use client"
+
 import { useWalletStore } from "@/store/useWalletStore";
 import { useHashConnect } from "@/hooks/useHashConnect";
 

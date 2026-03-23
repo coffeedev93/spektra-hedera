@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useState } from "react";
-import { useSearchParams } from 'next/navigation';
 import AssetSelector from "./asset-selector";
 import AmountInput from "./amount-input";
 import UserInputComponent from "./user-input";
