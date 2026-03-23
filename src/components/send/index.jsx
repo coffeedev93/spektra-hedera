@@ -9,7 +9,7 @@ import { generateStealthInfo } from "@/lib/stealthV2";
 import { publishAnnouncement } from "@/lib/service";
 
 
-export default function SendPayment({ _username }) { 
+export default function SendPayment({ _username, _query }) { 
 	const [amount, setAmount] = useState(0);
 	const [token, setToken] = useState("HBAR");
 	const [memo, setMemo] = useState("");
@@ -17,8 +17,7 @@ export default function SendPayment({ _username }) {
 	const [metaAddress, setMetaAddress] = useState("");
 	const [stealthInfo, setStealthInfo] = useState(null);
 
-	const searchParams = useSearchParams();
-	const data = searchParams.get('r');
+	const data = _query["r"];
 
 	useEffect(() => {
 		if (data) {
