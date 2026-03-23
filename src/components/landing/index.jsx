@@ -7,14 +7,17 @@ import dynamic from 'next/dynamic';
 // Importing dynamically to avoid HashConnect's SSR issues
 const WalletState = dynamic(() => import('./wallet-state'), {
   ssr: false,
+  loading: () => <span className="text-xs font-mono">Loading...</span>,
 });
 
 const HeroButons = dynamic(() => import('./hero-buttons'), {
   ssr: false,
+  loading: () => <span className="text-xs font-mono">Loading...</span>,
 });
 
 const LandingModal = dynamic(() => import('./modal'), {
   ssr: false,
+  loading: () => <span className="text-xs font-mono">Loading...</span>,
 });
 
 export default function Landing() {

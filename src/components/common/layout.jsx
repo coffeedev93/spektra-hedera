@@ -2,10 +2,10 @@
 
 import Link from "next/link";
 import dynamic from 'next/dynamic';
-//import WalletState from "../landing/wallet-state";
 
 const WalletState = dynamic(() => import('../landing/wallet-state'), {
 	ssr: false,
+	loading: () => <span className="text-xs font-mono">Loading...</span>,
 });
 
 export default function AppLayout({ children }) {
