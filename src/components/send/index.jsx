@@ -17,9 +17,9 @@ export default function SendPayment({ _username, _query }) {
 	const [metaAddress, setMetaAddress] = useState("");
 	const [stealthInfo, setStealthInfo] = useState(null);
 
-	const data = _query["r"];
-
 	useEffect(() => {
+		const data = _query ? _query["r"] : null;
+
 		if (data) {
 			const [_token, _amount, _memo] = atob(data).split("|");
 			setToken(_token);
@@ -27,7 +27,7 @@ export default function SendPayment({ _username, _query }) {
 			setMemo(_memo);
 			setUsername(decodeURIComponent(_username));
 		}
-	}, [data])
+	}, [_query])
 
 	useEffect(() => {
 		if (!metaAddress.startsWith("st:eth:0x")) {
