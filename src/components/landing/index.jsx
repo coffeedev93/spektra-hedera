@@ -6,13 +6,13 @@ import WalletState from "./wallet-state";
 import HeroButtons from "./hero-buttons";
 import LandingModal from "./modal";
 
-//import dynamic from 'next/dynamic';
+// import dynamic from 'next/dynamic';
 
 // function Dloading() {
 //   return <span className="text-xs font-mono">Loading...</span>
 // }
 
-// Importing dynamically to avoid HashConnect's SSR issues
+//Importing dynamically to avoid HashConnect's SSR issues
 // const WalletState = dynamic(() => import('./wallet-state'), {
 //   ssr: false,
 //   loading: () => <Dloading />,

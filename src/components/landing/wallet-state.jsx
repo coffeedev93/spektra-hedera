@@ -1,12 +1,13 @@
 "use client"
 
 import { useWalletStore } from "@/store/useWalletStore";
-import { useHashConnect } from "@/hooks/useHashConnect";
+import { useWalletConnectV3 } from "@/hooks/useWalletConnectV3";
+
 
 export default function WalletState({}) {
   // Bring in our global state and HashConnect methods
   const { accountId } = useWalletStore();
-  const { connect, disconnect } = useHashConnect();
+  const { connect, disconnect } = useWalletConnectV3();
   
   const isConnected = !!accountId;
 

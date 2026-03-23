@@ -1,13 +1,14 @@
 "use client"
 
 import { useState } from "react";
-import { useHashConnect } from "@/hooks/useHashConnect";
+import { useWalletConnectV3 } from "@/hooks/useWalletConnectV3";
+
 
 export default function LandingModal({ setIsModalOpen }) {
 	const [isSigning, setIsSigning] = useState(false);
   const [signatureSuccess, setSignatureSuccess] = useState(false);
 
-	const { signData } = useHashConnect();
+	const { signData } = useWalletConnectV3();
 
 	// Handler for the signature request
   const handleSignatureRequest = async () => {
@@ -20,7 +21,7 @@ export default function LandingModal({ setIsModalOpen }) {
       
       const response = await signData(payloadToSign);
      
-			console.log("response", response)
+			//console.log("response", response)
       console.log("Signature received:", response[0].signature.toString('hex'));
       
       // Here you would normally hash the signature to derive your Viewing/Spending keys

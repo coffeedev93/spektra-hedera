@@ -1,15 +1,15 @@
 "use client"
 
-import { useWalletStore } from "@/store/useWalletStore";
-import { useHashConnect } from "@/hooks/useHashConnect";
 import Link from "next/link";
+import { useWalletStore } from "@/store/useWalletStore";
+import { useWalletConnectV3 } from "@/hooks/useWalletConnectV3";
 
 export default function HeroButtons({
   setIsModalOpen
 }) {
   // Bring in our global state and HashConnect methods
   const { accountId } = useWalletStore();
-  const { connect } = useHashConnect();
+  const { connect } = useWalletConnectV3();
   
   const isConnected = !!accountId;
 
