@@ -1,8 +1,8 @@
 "use client"
 
 import Link from "next/link";
-import WalletState from "./wallet-state";
-import dynamic from 'next/dynamic';
+import WalletState from "../landing/wallet-state";
+//import dynamic from 'next/dynamic';
 
 // const WalletState = dynamic(() => import('../landing/wallet-state'), {
 // 	ssr: false,
