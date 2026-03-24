@@ -2,7 +2,8 @@ import {
   AccountId,
   PrivateKey,
   Client,
-  TopicMessageSubmitTransaction
+  TopicMessageSubmitTransaction,
+  TransferTransaction
 } from "@hiero-ledger/sdk";
 
 export const getRegistryEntry = async (user) => {

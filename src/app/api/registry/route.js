@@ -44,6 +44,34 @@ async function checkRegistry(userId) {
   }
 }
 
+async function checkRegistryWithSender(ethAddress) {
+  let client;
+  try {
+    client = initClient();
+    const query = new ContractCallQuery()
+      .setContractId(registryContractId)
+      .setGas(100_000)
+      .setFunction("stealthMetaAddressOf", // needs a getter function
+        new ContractFunctionParameters()
+          .addAddress(ethAddress)
+      )
+
+    const contractCallResult = await query.execute(client);
+    const data = contractCallResult.getString(0);
+
+    return {
+      success: true,
+      data,
+    };
+
+  } catch (error) {
+    console.log(error);
+    return { success: false }
+  } finally {
+    if (client) client.close();
+  }
+}
+
 async function updateRegistry(
   userId,
   stealthMetaAddress
@@ -88,7 +116,17 @@ async function updateRegistry(
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const userId = searchParams.get('userId');
-  const result = await checkRegistry(userId);
+  const evmAddress = searchParams.get('evmAddress');
+  let result;
+
+  console.log(userId, evmAddress)
+
+  if (userId) {
+    result = await checkRegistry(userId);
+  }
+  else if (evmAddress) {
+    result = await checkRegistryWithSender(evmAddress);
+  }
 
   return NextResponse.json(result)
 }

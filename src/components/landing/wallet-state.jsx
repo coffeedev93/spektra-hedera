@@ -21,7 +21,7 @@ export default function WalletState({}) {
           }`}
         ></div>
         {isConnected 
-          ? `${accountId}` 
+          ? `${accountId.substr(0,6)}...${accountId.substr(-2)}` 
           : "Not Connected"}
       </div>
       {isConnected && (

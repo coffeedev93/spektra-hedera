@@ -1,36 +1,10 @@
 'use client'
 
-import { useState } from "react";
 import Link from "next/link";
 import WalletState from "./wallet-state";
 import HeroButtons from "./hero-buttons";
-import LandingModal from "./modal";
-
-// import dynamic from 'next/dynamic';
-
-// function Dloading() {
-//   return <span className="text-xs font-mono">Loading...</span>
-// }
-
-//Importing dynamically to avoid HashConnect's SSR issues
-// const WalletState = dynamic(() => import('./wallet-state'), {
-//   ssr: false,
-//   loading: () => <Dloading />,
-// });
-
-// const HeroButtons = dynamic(() => import('./hero-buttons'), {
-//   ssr: false,
-//   loading: () => <Dloading />,
-// });
-
-// const LandingModal = dynamic(() => import('./modal'), {
-//   ssr: false,
-//   loading: () => <Dloading />,
-// });
 
 export default function Landing() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
   return (
     <>
       {/* TopNavBar */}
@@ -43,23 +17,6 @@ export default function Landing() {
           </div>
           <div className="flex items-center gap-6">
             <WalletState />
-            {/* <div className="flex items-center gap-6">
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-surface-container text-xs font-mono text-on-surface-variant">
-                <div 
-                  className={`w-2 h-2 rounded-full shadow-[0_0_8px_currentColor] ${
-                    isConnected ? "bg-tertiary text-tertiary" : "bg-error text-error"
-                  }`}
-                ></div>
-                {isConnected 
-                  ? `${accountId}` 
-                  : "Not Connected"}
-              </div>
-              {isConnected && (
-                <button onClick={disconnect} className="text-xs font-bold text-on-surface-variant hover:text-error transition-colors">
-                  Disconnect
-                </button>
-              )}
-            </div> */}
           </div>
         </div>
       </nav>
@@ -90,30 +47,7 @@ export default function Landing() {
               The latest upgrade for on-chain privacy. Transact without exposing
               your personal wallet using stealth address technology.
             </p>
-            <HeroButtons setIsModalOpen={setIsModalOpen} />
-            {/* <div className="flex flex-wrap gap-6">
-              {!isConnected ? (
-                <button
-                  onClick={connect}
-                  className="spectral-glow text-on-primary font-bold px-10 py-4 rounded-md text-lg active:scale-95 transition-all"
-                >
-                  Connect Wallet
-                </button>
-              ) : (
-                <button
-                  onClick={() => setIsModalOpen(true)}
-                  className="bg-surface-bright text-primary border border-primary/40 font-bold px-10 py-4 rounded-md text-lg active:scale-95 transition-all shadow-[0_0_15px_rgba(255,171,243,0.3)] hover:shadow-[0_0_25px_rgba(255,171,243,0.5)]"
-                >
-                  Initialize Session Keys
-                </button>
-              )}
-              <Link
-                href="/assets"
-                className="bg-surface-variant/40 border border-outline-variant/20 text-on-surface font-bold px-10 py-4 rounded-md text-lg hover:bg-surface-variant/60 transition-all"
-              >
-                Learn More
-              </Link>
-            </div> */}
+            <HeroButtons />
           </div>
 
           {/* Visual Decorative Element */}
@@ -198,13 +132,6 @@ export default function Landing() {
           </div>
         </section>
       </main>
-
-      {/* Signature Modal */}
-      {isModalOpen && (
-        <LandingModal 
-          setIsModalOpen={setIsModalOpen} 
-        />
-      )}
 
       {/* Footer */}
       <footer className="bg-[#131316] py-12 border-t border-outline-variant/10">

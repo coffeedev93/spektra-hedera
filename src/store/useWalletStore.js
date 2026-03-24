@@ -9,7 +9,9 @@ import { create } from 'zustand';
 
 export const useWalletStore = create((set) => ({
   accountId: null,
+  userMetaKeys: null,
   connectionState: 'Disconnected',
   setAccountId: (id) => set({ accountId: id }),
+  setUserMetaKeys: (obj) => set({ userMetaKeys: obj }),
   setConnectionState: (state) => set({ connectionState: state }),
 }));

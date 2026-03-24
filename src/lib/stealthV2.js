@@ -129,10 +129,13 @@ export async function generateSpendViewKeys(signer) {
 	const message = chainId === 1 ? baseMessage : `${baseMessage}\n\nChain ID: ${chainId}`;
 
 	// Get 65 byte signature from user using personal_sign
-	const userAddress = await signer.getAddress();
+	//const userAddress = await signer.getAddress();
 	const formattedMessage = hexlify(toUtf8Bytes(message));
 	//const signature = String(await this.provider.send('personal_sign', [formattedMessage, userAddress.toLowerCase()]));
-	const signature = String(await signer.signMessage(formattedMessage));
+	//const signature = String(await signer.signMessage(formattedMessage));
+  const sig = await signer.sign([formattedMessage]);
+  const ln = sig[0].signature.toHex(false).length;
+  const signature = `${ln===128?"0x00":"0x"}${sig[0].signature.toHex(false)}`;
 
 	// If a user can no longer access funds because their wallet was using eth_sign before this update, stand up a
 	// special "fund recovery login page" which uses the commented out code below to sign with eth_sign

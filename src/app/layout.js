@@ -1,5 +1,6 @@
 import { Inter, Manrope } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "react-hot-toast";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -30,6 +31,7 @@ export default function RootLayout({ children }) {
       <body
         className={`${inter.variable} ${manrope.variable} bg-background text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container`}
       >
+        <Toaster position="top-center" />
         {children}
       </body>
     </html>

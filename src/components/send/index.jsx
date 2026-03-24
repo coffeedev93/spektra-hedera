@@ -1,11 +1,13 @@
 "use client"
 
 import { useEffect, useState } from "react";
+import { toast } from 'react-hot-toast';
 import AssetSelector from "./asset-selector";
 import AmountInput from "./amount-input";
 import UserInputComponent from "./user-input";
 import { generateStealthInfo } from "@/lib/stealthV2";
 import { publishAnnouncement } from "@/lib/service";
+import { useWalletConnectV3 } from "@/hooks/useWalletConnectV3";
 
 
 export default function SendPayment({ _username, _query }) { 
@@ -15,6 +17,8 @@ export default function SendPayment({ _username, _query }) {
 	const [username, setUsername] = useState("");
 	const [metaAddress, setMetaAddress] = useState("");
 	const [stealthInfo, setStealthInfo] = useState(null);
+
+	const { transferHBAR, transferUSDC } = useWalletConnectV3();
 
 	useEffect(() => {
 		const data = _query ? _query["r"] : null;
@@ -42,14 +46,32 @@ export default function SendPayment({ _username, _query }) {
 	const exchangeRate = token === "USDC" ? 1 : 0.09;
 
 	const excecutePayment = async () => {
+		if (!stealthInfo) {
+			//alert(`The user ${username} doesn't exists!`)
+			toast.error(`The user ${username} doesn't exists!`)
+			return;
+		}
+
+		if (amount <= 0) {
+			//alert(`Amount should be higher than 0`)
+			toast.error(`Amount should be higher than 0`)
+			return;
+		}
+
 		//console.log(username, amount, token, stealthInfo)
 		// first send payment...
+		const payment = (token === "HBAR") ? 
+			await transferHBAR(stealthInfo.stealthAddress, amount):
+			await transferUSDC(stealthInfo.stealthAddress, amount);
+
+		console.log({payment});
+		toast.success("Payment sent!")
 
 		// then publish announcement
 		const msg = btoa(`${stealthInfo.stealthAddress}|${stealthInfo.ephemeralPublicKey}|${stealthInfo.viewTag}`);
 		const announ = await publishAnnouncement(msg);
 
-		console.log(announ)
+		console.log({announ})
 	}
 
   return (
