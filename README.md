@@ -1,4 +1,4 @@
-_Note: For post-hackathon updates check the **alpha** branch of this repo_
+_Note: For post-hackathon updates check the [**alpha**](https://github.com/coffeedev93/spektra-hedera) branch of this repo_
 
 # Spektra \- Private Hedera Payments
 
