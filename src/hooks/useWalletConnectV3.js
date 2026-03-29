@@ -1,5 +1,6 @@
 "use client"
 
+import { fetchAccountData } from '@/lib/service'
 import { generateSpendViewKeys } from '@/lib/stealthV2'
 import { useWalletStore } from '@/store/useWalletStore'
 import {
@@ -58,7 +59,8 @@ export const useWalletConnectV3 = () => {
   const [isInitializing, setIsInitializing] = useState(false);
 	const { 
 		accountId, 
-		setAccountId, 
+		setAccountId,
+		setAccountData, 
 		setUserMetaKeys,
 		setConnectionState 
 	} = useWalletStore();
@@ -67,9 +69,8 @@ export const useWalletConnectV3 = () => {
 		const init = async () => {
 			await initializeWalletConnect()
 			const _accountId = dappConnector.signers[0]?.getAccountId()?.toString();
-			console.log(accountId, _accountId)
 
-			if (!accountId) {
+			if (_accountId) {
 				updateAccountInfo(_accountId, "Connected", true)
 			}
 		}
@@ -90,13 +91,18 @@ export const useWalletConnectV3 = () => {
 				return;
 
 		try {
+			// account data
+			const data = await fetchAccountData(accountId);
+			setAccountData(data);
+
 			if (_requestSignature) {
 				const val = window.sessionStorage.getItem("metaKeys");
 				if (val !== null) {
 					setUserMetaKeys(JSON.parse(val));
 				}
 				else {
-					let signer = getSigner();
+					let signer = getSigner(_accountId);
+					//console.log(signer)
 					const metaKeys = await generateSpendViewKeys(signer);
 					setUserMetaKeys(metaKeys);
 					window.sessionStorage.setItem("metaKeys", JSON.stringify(metaKeys));
@@ -110,9 +116,9 @@ export const useWalletConnectV3 = () => {
 
 	const connect = async () => {
 		await initializeWalletConnect()
-		await dappConnector.openModal().then((res) => {
-			const _accountId = dappConnector.signers[0]?.getAccountId()?.toString();
-			//console.log(accountId, res)
+		await dappConnector.openModal().then((session) => {
+			//const _accountId = dappConnector.signers[0]?.getAccountId()?.toString();
+			const _accountId = session.namespaces.hedera.accounts[0].split(":")[2];
 			if (_accountId) {
 				updateAccountInfo(_accountId, "Connected", true)
 			} else {
@@ -128,11 +134,13 @@ export const useWalletConnectV3 = () => {
     });
 	}
 
-	const getSigner = () => {
+	const getSigner = (_accountId) => {
     if (dappConnector.signers.length === 0) {
       throw new Error('No signers found!');
     }
-    return dappConnector.signers[0];
+		const id = accountId || _accountId;
+		//console.log(dappConnector.signers, id);
+    return dappConnector.signers.find(sig => sig.accountId.toString() === id);
   }
 
 	const signData = async (message) => {
@@ -153,41 +161,32 @@ export const useWalletConnectV3 = () => {
     }
 	}
 
-	const transferHBAR = async (toAddress, amount) => {
-		// const transferHBARTransaction = new TransferTransaction()
-		// 	.addHbarTransfer(accountId, -amount)
-		// 	.addHbarTransfer(toAddress, amount);
+	const makeTransfer = async (toAddress, numAmount, asset) => {
+		try {
+			const USDC_ID = process.env.NEXT_PUBLIC_USDC_TOKEN_ID;
+      const tx = new TransferTransaction();
+      
+      if (asset === 'HBAR') {
+        tx.addHbarTransfer(accountId, new Hbar(-numAmount))
+          .addHbarTransfer(toAddress, new Hbar(numAmount));
+      } else {
+        const amountRaw = Math.round(numAmount * 1000000);
+        tx.addTokenTransfer(USDC_ID, accountId, -amountRaw)
+          .addTokenTransfer(USDC_ID, toAddress, amountRaw);
+      }
 
-		// const signer = getSigner();
-		// await transferHBARTransaction.freezeWithSigner(signer);
-		// const txResult = await transferHBARTransaction.executeWithSigner(signer);
-		// return txResult ? txResult.transactionId : null;
-
-		const toAccount = AccountId.fromString(toAddress);
-    const fromAccount = AccountId.fromString(accountId);
-
-		const signer = getSigner();
-		const tinybarAmount = Number(amount) * 100_000_000;
-
-		const transaction = await new TransferTransaction()
-				.addHbarTransfer(fromAccount, Hbar.fromTinybars(-1 * tinybarAmount)) //Sending account
-				.addHbarTransfer(toAccount, Hbar.fromTinybars(tinybarAmount)) //Receiving account
-				.freezeWithSigner(signer);
-
-		return await this.executeTransaction(transaction);
-	}
-
-	const transferUSDC = async (toAddress, amount) => {
-		const tokenId = process.env.NEXT_PUBLIC_USDC_TOKEN_ID;
-
-		const transferTokenTransaction = new TransferTransaction()
-			.addTokenTransfer(tokenId, accountId, -amount)
-			.addTokenTransfer(tokenId, toAddress.toString(), amount);
-
-		const signer = getSigner();
-		await transferTokenTransaction.freezeWithSigner(signer);
-		const txResult = await transferTokenTransaction.executeWithSigner(signer);
-		return txResult ? txResult.transactionId : null;
+      // 2. Sign and Execute via WalletConnect. Get the current signer!
+      //const signer = dappConnector.signers.find(sig => sig.accountId.toString() === accountId);
+			const signer = getSigner();
+      const result = await tx.executeWithSigner(signer);
+      const receipt = await result.getReceiptWithSigner(signer);
+      
+      return { error: false, message: receipt }
+			re
+    } catch (err) {
+      console.log(err)
+			return { error: true, message: err.message }
+    } 
 	}
 
 	return {
@@ -195,7 +194,6 @@ export const useWalletConnectV3 = () => {
 		disconnect,
 		getSigner,
 		signData,
-		transferHBAR,
-		transferUSDC
+		makeTransfer
 	}
 }

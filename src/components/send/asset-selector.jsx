@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 
-export default function AssetSelector({ token, setToken }) {
+export default function AssetSelector({ token, setToken, balances }) {
   const assets = [
     {
       id: 'HBAR',
       symbol: 'Ξ',
       name: 'HBAR',
-      balance: '10 HBAR Available',
       iconBg: 'bg-[#627eea]',
       iconSize: 'text-xs',
     },
@@ -14,7 +13,6 @@ export default function AssetSelector({ token, setToken }) {
       id: 'USDC',
       symbol: '$',
       name: 'USDC',
-      balance: '20.00 USDC',
       iconBg: 'bg-[#2775ca]',
       iconSize: 'text-[10px]',
     },
@@ -46,7 +44,7 @@ export default function AssetSelector({ token, setToken }) {
                   {asset.name}
                 </div>
                 <div className="text-[10px] text-on-surface-variant">
-                  {asset.balance}
+                  {balances[asset.id]}
                 </div>
               </div>
             </div>

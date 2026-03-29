@@ -1,8 +1,9 @@
 "use client"
 
+import { useState } from "react";
+import { toast } from 'react-hot-toast';
 import { setRegistryEntry } from "@/lib/service";
 import { useWalletStore } from "@/store/useWalletStore";
-import { useState } from "react";
 
 
 export default function NameRegisterModal({ setIsModalOpen }) {
@@ -14,7 +15,8 @@ export default function NameRegisterModal({ setIsModalOpen }) {
 		const metaAddress = `st:eth:0x${userMetaKeys.spendingKeyPair.public.replace("0x", "")}${userMetaKeys.viewingKeyPair.public.replace("0x", "")}`;
 		console.log(userMetaKeys, metaAddress)
 		const res = await setRegistryEntry("@pepe", metaAddress);
-		console.log(res)
+		console.log(res);
+		toast.success("UserId Claimed!");
 	}
 
   return (

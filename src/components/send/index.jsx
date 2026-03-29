@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { toast } from 'react-hot-toast';
 import AssetSelector from "./asset-selector";
 import AmountInput from "./amount-input";
@@ -8,9 +8,11 @@ import UserInputComponent from "./user-input";
 import { generateStealthInfo } from "@/lib/stealthV2";
 import { publishAnnouncement } from "@/lib/service";
 import { useWalletConnectV3 } from "@/hooks/useWalletConnectV3";
+import { useWalletStore } from "@/store/useWalletStore";
 
 
 export default function SendPayment({ _username, _query }) { 
+	const [balances, setBalances] = useState({ HBAR: 0, USDC: 0 });
 	const [amount, setAmount] = useState(0);
 	const [token, setToken] = useState("HBAR");
 	const [memo, setMemo] = useState("");
@@ -18,7 +20,8 @@ export default function SendPayment({ _username, _query }) {
 	const [metaAddress, setMetaAddress] = useState("");
 	const [stealthInfo, setStealthInfo] = useState(null);
 
-	const { transferHBAR, transferUSDC } = useWalletConnectV3();
+	const { accountId } = useWalletStore();
+	const { makeTransfer } = useWalletConnectV3();
 
 	useEffect(() => {
 		const data = _query ? _query["r"] : null;
@@ -30,6 +33,8 @@ export default function SendPayment({ _username, _query }) {
 			setMemo(_memo);
 			setUsername(decodeURIComponent(_username));
 		}
+
+		fetchBalances(accountId);
 	}, [_query])
 
 	useEffect(() => {
@@ -45,33 +50,66 @@ export default function SendPayment({ _username, _query }) {
 
 	const exchangeRate = token === "USDC" ? 1 : 0.09;
 
+	const fetchBalances = useCallback(async (id) => {
+		if (!id) return;
+		
+		const MIRROR_NODE_URL = "https://testnet.mirrornode.hedera.com";
+    try {
+      const response = await fetch(`${MIRROR_NODE_URL}/api/v1/accounts/${id}`);
+      const data = await response.json();
+      
+      const hbarBalance = data.balance.balance / 1e8;
+      const usdcToken = data.balance.tokens.find(t => t.token_id === process.env.NEXT_PUBLIC_USDC_TOKEN_ID);
+      const usdcBalance = usdcToken ? usdcToken.balance / 1e6 : 0;
+
+      setBalances({ HBAR: hbarBalance, USDC: usdcBalance });
+    } catch (err) {
+      console.error("Balance fetch error:", err);
+    }
+  }, []);
+
 	const excecutePayment = async () => {
 		if (!stealthInfo) {
-			//alert(`The user ${username} doesn't exists!`)
 			toast.error(`The user ${username} doesn't exists!`)
 			return;
 		}
 
 		if (amount <= 0) {
-			//alert(`Amount should be higher than 0`)
 			toast.error(`Amount should be higher than 0`)
 			return;
 		}
 
-		//console.log(username, amount, token, stealthInfo)
-		// first send payment...
-		const payment = (token === "HBAR") ? 
-			await transferHBAR(stealthInfo.stealthAddress, amount):
-			await transferUSDC(stealthInfo.stealthAddress, amount);
+		if (!accountId) {
+			toast.error("Please connect wallet");
+			return;
+		}
 
-		console.log({payment});
-		toast.success("Payment sent!")
+		// Validation & Balance Check
+    const numAmount = parseFloat(amount);
+    const currentBalance = token === "HBAR" ? balances.HBAR : balances.USDC;
+    
+    if (numAmount > currentBalance) {
+			toast.error(`Insufficient ${asset} balance`)
+      return;
+    }
+
+		// https://docs.hedera.com/hedera/tutorials/more-tutorials/how-to-auto-create-hedera-accounts-with-hbar-and-token-transfers
+		const result = await makeTransfer(stealthInfo.stealthAddress, numAmount, token);
+
+		if (result.error) {
+			toast.error(`Payment failed: ${result.message}`);
+			return;
+		}
+
+		console.log(`Transaction sent: ${result.message}`);
+		toast.success("Payment sent!");
 
 		// then publish announcement
-		const msg = btoa(`${stealthInfo.stealthAddress}|${stealthInfo.ephemeralPublicKey}|${stealthInfo.viewTag}`);
+		const msg = (`${stealthInfo.stealthAddress}|${stealthInfo.ephemeralPublicKey}|${stealthInfo.viewTag}`);
 		const announ = await publishAnnouncement(msg);
 
 		console.log({announ})
+		toast.success("Anouncement Published!")
 	}
 
   return (
@@ -117,10 +155,14 @@ export default function SendPayment({ _username, _query }) {
 							<label
 								className="block text-xs font-medium tracking-[0.1rem] uppercase text-on-surface-variant mb-4">Select
 								Asset</label>
-							<AssetSelector token={token} setToken={setToken} />
+							<AssetSelector 
+								token={token} 
+								setToken={setToken} 
+								balances={balances}
+							/>
 						</div>
 						<AmountInput 
-							max={500} 
+							max={balances[token]} 
 							amount={amount} 
 							setAmount={setAmount}
 							rate={exchangeRate}

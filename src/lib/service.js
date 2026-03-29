@@ -85,6 +85,46 @@ export const getAnnouncements = async () => {
   return getTopicMessagesData;
 }
 
+export const fetchAccountData = async (id) => {
+  if (!id) return { HBAR: 0, USDC: 0 };
+
+  const MIRROR_NODE_URL = "https://testnet.mirrornode.hedera.com";
+  try {
+    const response = await fetch(`${MIRROR_NODE_URL}/api/v1/accounts/${id}`);
+    const data = await response.json();
+    
+    const hbarBalance = data.balance.balance / 1e8;
+    const usdcToken = data.balance.tokens.find(t => t.token_id === process.env.NEXT_PUBLIC_USDC_TOKEN_ID);
+    const usdcBalance = usdcToken ? usdcToken.balance / 1e6 : 0;
+
+    const balances = { HBAR: hbarBalance, USDC: usdcBalance };
+    const {
+      alias,
+      account,
+      created_timestamp,
+      ethereum_nonce,
+      evm_address,
+      transactions,
+      key:{key}
+    } = data;
+
+    return {
+      alias,
+      account,
+      balances,
+      created_timestamp,
+      ethereum_nonce,
+      evm_address,
+      transactions,
+      key
+    }
+
+  } catch (err) {
+    console.error("Balance fetch error:", err);
+    return { HBAR: 0, USDC: 0 }
+  }
+}
+
 
 // This is a call to the Stealth Registry smart contract
 export const checkRegistryEntry = async (value) => {
